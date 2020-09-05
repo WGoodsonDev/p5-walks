@@ -1,12 +1,14 @@
-let xScl = 10;
-let yScl = 10;
+let xScl = 4;
+let yScl = 4;
 
 let numWalks = 20;
 let walkMinLength = 100;
-let walkMaxLength = 200;
+let walkMaxLength = 1000;
 let walks = [];
 
 let numStepsPerWalk = 0;
+
+let animationSpeed = 1.0;
 
 const stepMap = {
 	0: 'u',
@@ -51,9 +53,9 @@ function setup() {
 }
 
 function draw() {
-	background(0, 0, 10);
+	background(0, 0, 5);
 
-	if(frameCount % 2 === 0){numStepsPerWalk += 1;}
+	if(frameCount % 2 === 0){numStepsPerWalk += animationSpeed;}
 
 	stroke(0, 0, 15);
 	strokeWeight(1);
@@ -68,7 +70,7 @@ function draw() {
 
 
 	walks.forEach((walk, idx) => {
-		let hue = map(idx, 0, walks.length, 15, 45);
+		let hue = map(idx, 0, walks.length, 0, 50);
 		stroke(hue, 100, 100, 10);
 		strokeWeight(2);
 		walk.display(numStepsPerWalk);
@@ -147,14 +149,20 @@ class Walk{
 	}
 
 	display(steps){
+		// Save transform matrix, translate to origin
 		push();
 		translate(this.origin[0], this.origin[1]);
 
+		// For each step in this walk,
 		for(let i = 0; i < min(steps, this.length); i++){
+			// Access current step
 			const step = this.steps[i];
+			// Look up correct dx, dy values for current step
 			let dx = dXdY[step]['dx'];
 			let dy = dXdY[step]['dy'];
+			// Draw line from current origin to point in correct direction
 			line(0, 0, dx * xScl, dy * yScl);
+			// Translate origin to endpoint for next step
 			translate(dx * xScl, dy * yScl);
 		}
 
