@@ -58,13 +58,13 @@ function draw() {
 	stroke(0, 0, 15);
 	strokeWeight(1);
 	// Draw grid lines
-	for(let i = 0; i <= width; i += xScl){
-		line(i, 0, i, height);
-	}
-
-	for(let i = 0; i <= height; i += yScl){
-		line(0, i, width, i);
-	}
+	// for(let i = 0; i <= width; i += xScl){
+	// 	line(i, 0, i, height);
+	// }
+	//
+	// for(let i = 0; i <= height; i += yScl){
+	// 	line(0, i, width, i);
+	// }
 
 
 	walks.forEach((walk, idx) => {
@@ -134,8 +134,8 @@ function generateWalk(length){
 }
 
 class Walk{
-	constructor(length) {
-		this.origin = [width/2, height/2];
+	constructor(originX, originY, length) {
+		this.origin = [originX, originY];
 		this.length = length;
 		this.steps = generateWalk(length);
 	}
@@ -167,7 +167,7 @@ function newWalks(){
 	walks = [];
 	numStepsPerWalk = 0;
 	for(let i = 0; i < numWalks; i++){
-		const newWalk = new Walk(round(random(walkMinLength, walkMaxLength)));
+		const newWalk = new Walk(mouseX, mouseY, int(random(walkMinLength, walkMaxLength)));
 		walks.push(newWalk)
 	}
 }
