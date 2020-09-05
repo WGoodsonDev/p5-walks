@@ -1,9 +1,9 @@
 let xScl = 4;
 let yScl = 4;
 
-let numWalks = 20;
+let numWalks = 50;
 let walkMinLength = 100;
-let walkMaxLength = 1000;
+let walkMaxLength = 800;
 let walks = [];
 
 let numStepsPerWalk = 0;
@@ -77,6 +77,10 @@ function draw() {
 
 		walk.drawOrigin();
 	})
+
+	textSize(24);
+	fill(0, 0, 50);
+	text(frameRate().toString(), 10, height - 14);
 
 }
 
@@ -157,14 +161,22 @@ class Walk{
 			Draw line from current origin to point in correct direction
 			Translate origin to endpoint for next step
 		Restore transformation matrix
-	new algo:
 
+	new algo:
+		add points to structure that draws with beginShape(), vertex(), endShape()
+		noFill();
+		beginShape();
+		for each point in walk structure:
+			vertex();
+			...
+		endShape();
 	*/
 
 	display(steps){
-		// Save transformation matrix, translate to origin
-		push();
-		translate(this.origin[0], this.origin[1]);
+		noFill();
+		beginShape();
+
+		let currentPoint = this.origin;
 
 		// For each step in this walk,
 		for(let i = 0; i < min(steps, this.length); i++){
@@ -173,13 +185,14 @@ class Walk{
 			// Look up correct dx, dy values for current step
 			let dx = dXdY[step]['dx'];
 			let dy = dXdY[step]['dy'];
-			// Draw line from current origin to point in correct direction
-			line(0, 0, dx * xScl, dy * yScl);
-			// Translate origin to endpoint for next step
-			translate(dx * xScl, dy * yScl);
+
+			vertex(currentPoint[0], currentPoint[1]);
+			// Next point: (dx * xScl, dy * yScl)
+			currentPoint = [currentPoint[0] + (dx * xScl), currentPoint[1] + (dy * yScl)];
 		}
-		// Restore transformation matrix
-		pop();
+
+		endShape();
+
 	}
 
 }
@@ -189,7 +202,7 @@ function newWalks(){
 	numStepsPerWalk = 0;
 	for(let i = 0; i < numWalks; i++){
 		const newWalk = new Walk(mouseX, mouseY, int(random(walkMinLength, walkMaxLength)));
-		walks.push(newWalk)
+		walks.push(newWalk);
 	}
 }
 
