@@ -44,16 +44,18 @@ const dXdY = {
 
 function setup() {
 	createCanvas(720, 720);
-	background(20, 20, 20);
 	colorMode(HSB, 100);
+	background(0, 0, 10);
 	// blendMode(SCREEN);
 	newWalks();
 }
 
 function draw() {
+	background(0, 0, 10);
+
 	if(frameCount % 2 === 0){numStepsPerWalk += 1;}
 
-	stroke(0, 0, 10);
+	stroke(0, 0, 15);
 	strokeWeight(1);
 	// Draw grid lines
 	for(let i = 0; i <= width; i += xScl){
