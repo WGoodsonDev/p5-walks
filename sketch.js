@@ -185,8 +185,10 @@ class Walk{
 			// Look up correct dx, dy values for current step
 			let dx = dXdY[step]['dx'];
 			let dy = dXdY[step]['dy'];
-			line(0, 0, dx * xScl, dy * yScl);
-			translate(dx * xScl, dy * yScl);
+
+			vertex(currentPoint[0], currentPoint[1]);
+			// Next point: (dx * xScl, dy * yScl)
+			currentPoint = [currentPoint[0] + (dx * xScl), currentPoint[1] + (dy * yScl)];
 		}
 
 		endShape();
