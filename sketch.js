@@ -1,8 +1,9 @@
-let xScl = 20;
-let yScl = 20;
+let xScl = 10;
+let yScl = 10;
 
 let numWalks = 20;
-
+let walkMinLength = 100;
+let walkMaxLength = 200;
 let walks = [];
 
 let numStepsPerWalk = 0;
@@ -47,17 +48,13 @@ function setup() {
 	colorMode(HSB, 100);
 	// blendMode(SCREEN);
 	newWalks();
-	console.log(walks);
 }
 
 function draw() {
-	if(frameCount % 4 === 0){numStepsPerWalk++};
+	if(frameCount % 2 === 0){numStepsPerWalk += 1;}
 
 	stroke(0, 0, 10);
 	strokeWeight(1);
-
-	// Draw circle at origin
-	circle(width / 2, height / 2, 10);
 	// Draw grid lines
 	for(let i = 0; i <= width; i += xScl){
 		line(i, 0, i, height);
@@ -69,11 +66,12 @@ function draw() {
 
 
 	walks.forEach((walk, idx) => {
-		let hue = map(idx, 0, walks.length, 25, 50);
+		let hue = map(idx, 0, walks.length, 15, 45);
 		stroke(hue, 100, 100, 10);
 		strokeWeight(2);
-
 		walk.display(numStepsPerWalk);
+
+		walk.drawOrigin();
 	})
 
 }
@@ -135,13 +133,20 @@ function generateWalk(length){
 
 class Walk{
 	constructor(length) {
+		this.origin = [width/2, height/2];
 		this.length = length;
 		this.steps = generateWalk(length);
 	}
 
+	drawOrigin(){
+		// Draw circle at origin
+		fill(0, 0, 10);
+		circle(this.origin[0], this.origin[1], xScl / 2);
+	}
+
 	display(steps){
 		push();
-		translate(width/2, height/2);
+		translate(this.origin[0], this.origin[1]);
 
 		for(let i = 0; i < min(steps, this.length); i++){
 			const step = this.steps[i];
@@ -160,7 +165,7 @@ function newWalks(){
 	walks = [];
 	numStepsPerWalk = 0;
 	for(let i = 0; i < numWalks; i++){
-		const newWalk = new Walk(round(random(24, 64)));
+		const newWalk = new Walk(round(random(walkMinLength, walkMaxLength)));
 		walks.push(newWalk)
 	}
 }
