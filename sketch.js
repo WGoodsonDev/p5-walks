@@ -1,5 +1,4 @@
-let xScl = 7;
-let yScl = 7;
+let scaleFactor = 10;
 
 let numWalks = 30;
 let walkMinLength = 200;
@@ -64,7 +63,7 @@ function draw() {
 	strokeWeight(1);
 
 	// Draw grid lines
-	// for(let i = 0; i <= width; i += xScl){
+	// for(let i = 0; i <= width; i += scaleFactor){
 	// 	line(i, 0, i, height);
 	// }
 	//
@@ -163,6 +162,17 @@ function mouseClicked(){
 	newWalks();
 }
 
+// Mouse wheel zoom
+function mouseWheel(event) {
+	if(event.delta < 0){
+		scaleFactor = scaleFactor * 1.15;
+	} else if(event.delta > 0){
+		scaleFactor = scaleFactor * 0.75;
+	}
+}
+
+
 function easeInSine(x){
 	return 1 - cos((x * PI) / 2);
 }
+

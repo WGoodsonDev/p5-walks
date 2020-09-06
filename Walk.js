@@ -9,7 +9,7 @@ class Walk{
     drawOrigin(){
         // Draw circle at origin
         fill(0, 0, 10);
-        circle(this.origin[0], this.origin[1], xScl / 2);
+        circle(this.origin[0], this.origin[1], scaleFactor / 2);
     }
 
     display(steps){
@@ -27,8 +27,8 @@ class Walk{
             let dy = dXdY[step]['dy'];
 
             vertex(currentPoint[0], currentPoint[1]);
-            // Next point: (dx * xScl, dy * yScl)
-            currentPoint = [currentPoint[0] + (dx * xScl), currentPoint[1] + (dy * yScl)];
+            // Next point: (dx * scaleFactor, dy * yScl)
+            currentPoint = [currentPoint[0] + (dx * scaleFactor), currentPoint[1] + (dy * scaleFactor)];
         }
 
         endShape();
