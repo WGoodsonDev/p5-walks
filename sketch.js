@@ -1,10 +1,11 @@
-let xScl = 4;
-let yScl = 4;
+let xScl = 7;
+let yScl = 7;
 
-let numWalks = 50;
-let walkMinLength = 100;
-let walkMaxLength = 800;
+let numWalks = 30;
+let walkMinLength = 200;
+let walkMaxLength = 240;
 let walks = [];
+let longestWalk;
 
 let numStepsPerWalk = 0;
 
@@ -56,9 +57,12 @@ function draw() {
 	background(0, 0, 5);
 
 	if(frameCount % 2 === 0){numStepsPerWalk += animationSpeed;}
+	// const animT = map()
+	// numStepsPerWalk = easeInSine()
 
 	stroke(0, 0, 15);
 	strokeWeight(1);
+
 	// Draw grid lines
 	// for(let i = 0; i <= width; i += xScl){
 	// 	line(i, 0, i, height);
@@ -80,8 +84,7 @@ function draw() {
 
 	textSize(24);
 	fill(0, 0, 50);
-	text(frameRate().toString(), 10, height - 14);
-
+	text(int(frameRate()), 10, height - 14);
 }
 
 function generateWalk(length){
@@ -139,64 +142,6 @@ function generateWalk(length){
 	return walk;
 }
 
-class Walk{
-	constructor(originX, originY, length) {
-		this.origin = [originX, originY];
-		this.length = length;
-		this.steps = generateWalk(length);
-	}
-
-	drawOrigin(){
-		// Draw circle at origin
-		fill(0, 0, 10);
-		circle(this.origin[0], this.origin[1], xScl / 2);
-	}
-
-	/*
-	current algo:
-		Save transformation matrix, translate to origin
-		For each step in this walk:
-			Access current step
-			Look up correct dx, dy values for current step
-			Draw line from current origin to point in correct direction
-			Translate origin to endpoint for next step
-		Restore transformation matrix
-
-	new algo:
-		add points to structure that draws with beginShape(), vertex(), endShape()
-		noFill();
-		beginShape();
-		for each point in walk structure:
-			vertex();
-			...
-		endShape();
-	*/
-
-	display(steps){
-		noFill();
-		beginShape();
-
-		let currentPoint = this.origin;
-
-		// For each step in this walk,
-		for(let i = 0; i < min(steps, this.length); i++){
-			// Access current step
-			const step = this.steps[i];
-			// Look up correct dx, dy values for current step
-			let dx = dXdY[step]['dx'];
-			let dy = dXdY[step]['dy'];
-
-			vertex(currentPoint[0], currentPoint[1]);
-			// Next point: (dx * xScl, dy * yScl)
-			currentPoint = [currentPoint[0] + (dx * xScl), currentPoint[1] + (dy * yScl)];
-		}
-
-		endShape();
-
-	}
-
-}
-
 function newWalks(){
 	walks = [];
 	numStepsPerWalk = 0;
@@ -204,8 +149,20 @@ function newWalks(){
 		const newWalk = new Walk(mouseX, mouseY, int(random(walkMinLength, walkMaxLength)));
 		walks.push(newWalk);
 	}
+
+	// Find walkLength of longest walk for easing function
+	let walkLengths = [];
+	walks.forEach(walk => {
+		walkLengths.push(walk.walkLength);
+	});
+	longestWalk = Math.max(...walkLengths);
+	console.log(longestWalk);
 }
 
 function mouseClicked(){
 	newWalks();
+}
+
+function easeInSine(x){
+	return 1 - cos((x * PI) / 2);
 }
